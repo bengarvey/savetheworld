@@ -3,7 +3,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.image('background','assets/tests/debug-grid-1920x1920.png');
-    game.load.image('player','assets/sprites/phaser-dude.png');
+    game.load.image('player','assets/sprites/hero.png');
 
 }
 
