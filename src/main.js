@@ -2,7 +2,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.image('background','assets/tests/debug-grid-1920x1920.png');
+    game.load.image('background','assets/tests/real-city.png');
     game.load.image('player','assets/sprites/phaser-dude.png');
 
 }
@@ -12,9 +12,9 @@ var cursors;
 
 function create() {
 
-    game.add.tileSprite(0, 0, 1920, 1920, 'background');
+    game.add.tileSprite(0, 0, 672, 320, 'background');
 
-    game.world.setBounds(0, 0, 1920, 1920);
+    game.world.setBounds(0, 0, 672, 320);
 
     game.physics.startSystem(Phaser.Physics.P2JS);
 
