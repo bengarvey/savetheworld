@@ -4,6 +4,7 @@ function preload() {
 
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('player','assets/sprites/phaser-dude.png');
+    game.load.image('green-energy','assets/sprites/green-energy.png');
 
 }
 
@@ -12,18 +13,24 @@ var cursors;
 var jumpTimer = 0;
 
 function create() {
-    game.add.tileSprite(0, 0,2000, 568, 'background');
+    var worldWidth = 10000;
+    var worldHeight = 568;
 
-    game.world.setBounds(0, 0, 2000, 568);
+    game.add.tileSprite(0, 0, worldWidth, worldHeight, 'background');
+
+    game.world.setBounds(0, 0, worldWidth, worldHeight);
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = 1500;
 
     player = game.add.sprite(1, game.world.centerY, 'player');
+    powerup = game.add.sprite(35, game.world.centerY, 'green-energy');
 
     game.physics.enable(player);
-
     player.body.collideWorldBounds = true;
+    game.physics.enable(powerup);
+    powerup.body.collideWorldBounds = true;
+
     cursors = game.input.keyboard.createCursorKeys();
 
     game.camera.follow(player);
