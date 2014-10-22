@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(672, 321, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -9,36 +9,33 @@ function preload() {
 
 var player;
 var cursors;
+var jumpTimer = 0;
 
 function create() {
-
     game.add.tileSprite(0, 0, 672, 320, 'background');
 
     game.world.setBounds(0, 0, 672, 320);
 
-    game.physics.startSystem(Phaser.Physics.P2JS);
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.gravity.y = 1500;
 
     player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 
-    game.physics.p2.enable(player);
+    game.physics.enable(player);
 
+    player.body.collideWorldBounds = true;
     cursors = game.input.keyboard.createCursorKeys();
 
     game.camera.follow(player);
-
 }
 
 function update() {
 
-    player.body.setZeroVelocity();
+    player.body.velocity.x = 0;
 
     if (cursors.up.isDown)
     {
-        player.body.moveUp(300)
-    }
-    else if (cursors.down.isDown)
-    {
-        player.body.moveDown(300);
+        player.body.velocity.y = -500;
     }
 
     if (cursors.left.isDown)
@@ -47,7 +44,7 @@ function update() {
     }
     else if (cursors.right.isDown)
     {
-        player.body.moveRight(300);
+        player.body.velocity.x = 300;
     }
 
 }
