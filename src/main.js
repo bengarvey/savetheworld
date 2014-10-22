@@ -1,44 +1,48 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(320, 568, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
-    game.load.image('background','assets/tests/debug-grid-1920x1920.png');
     game.load.image('player','assets/sprites/hero.png');
+    game.load.image('background','assets/tests/space-city.png');
+    game.load.image('green-energy','assets/sprites/green-energy.png');
 
 }
 
 var player;
 var cursors;
+var jumpTimer = 0;
 
 function create() {
+    var worldWidth = 10000;
+    var worldHeight = 568;
 
-    game.add.tileSprite(0, 0, 1920, 1920, 'background');
+    game.add.tileSprite(0, 0, worldWidth, worldHeight, 'background');
 
-    game.world.setBounds(0, 0, 1920, 1920);
+    game.world.setBounds(0, 0, worldWidth, worldHeight);
 
-    game.physics.startSystem(Phaser.Physics.P2JS);
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.gravity.y = 1500;
 
-    player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+    player = game.add.sprite(1, game.world.centerY, 'player');
+    powerup = game.add.sprite(35, game.world.centerY, 'green-energy');
 
-    game.physics.p2.enable(player);
+    game.physics.enable(player);
+    player.body.collideWorldBounds = true;
+    game.physics.enable(powerup);
+    powerup.body.collideWorldBounds = true;
 
     cursors = game.input.keyboard.createCursorKeys();
 
     game.camera.follow(player);
-
 }
 
 function update() {
 
-    player.body.setZeroVelocity();
+    player.body.velocity.x = 0;
 
     if (cursors.up.isDown)
     {
-        player.body.moveUp(300)
-    }
-    else if (cursors.down.isDown)
-    {
-        player.body.moveDown(300);
+        player.body.velocity.y = -500;
     }
 
     if (cursors.left.isDown)
@@ -47,7 +51,7 @@ function update() {
     }
     else if (cursors.right.isDown)
     {
-        player.body.moveRight(300);
+        player.body.velocity.x = 300;
     }
 
 }
