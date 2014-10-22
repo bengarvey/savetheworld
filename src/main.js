@@ -1,8 +1,8 @@
-var game = new Phaser.Game(672, 321, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(320, 568, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
-    game.load.image('background','assets/tests/real-city.png');
+    game.load.image('background','assets/tests/space-city.png');
     game.load.image('player','assets/sprites/phaser-dude.png');
 
 }
@@ -12,14 +12,14 @@ var cursors;
 var jumpTimer = 0;
 
 function create() {
-    game.add.tileSprite(0, 0, 672, 320, 'background');
+    game.add.tileSprite(0, 0,2000, 568, 'background');
 
-    game.world.setBounds(0, 0, 672, 320);
+    game.world.setBounds(0, 0, 2000, 568);
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = 1500;
 
-    player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+    player = game.add.sprite(1, game.world.centerY, 'player');
 
     game.physics.enable(player);
 
