@@ -4,6 +4,7 @@ function preload() {
     game.load.spritesheet('player','assets/sprites/heroSheet.png', 32, 32);
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
+    game.load.image('tentacle', 'assets/sprites/tentacleDude.png')
     game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
 }
 
@@ -32,10 +33,10 @@ function create() {
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     powerup = game.add.sprite(35, game.world.centerY, 'green-energy');
-    joker = game.add.sprite(5000, game.world.centerY, 'player');
-    catwoman = game.add.sprite(4000, game.world.centerY, 'player');
-    darthvader = game.add.sprite(3000, game.world.centerY, 'player');
-    alien = game.add.sprite(2000, game.world.centerY, 'player');
+    joker = game.add.sprite(5000, game.world.centerY, 'tentacle');
+    catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
+    darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
+    alien = game.add.sprite(2000, game.world.centerY, 'tentacle');
 
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.body.collideWorldBounds = true;
