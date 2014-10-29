@@ -1,4 +1,4 @@
-var game = new Phaser.Game("100%", 568, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game("100%", 420, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
     game.load.image('player','assets/sprites/hero.png');
@@ -13,9 +13,10 @@ var jumpTimer = 0;
 
 function create() {
     var worldWidth = 10000;
-    var worldHeight = 568;
+    var worldHeight = 420;
 
-    game.add.tileSprite(0, 0, worldWidth, worldHeight, 'background');
+    game.add.tileSprite(0, -150, worldWidth, worldHeight+150, 'background');
+
     game.world.setBounds(0, 0, worldWidth, worldHeight);
 
     music = game.add.audio('amia_dope_song');
@@ -51,6 +52,10 @@ function create() {
     game.camera.follow(player);
 }
 
+function restartGame() {
+    game.state.restart();
+}
+
 function update() {
 
     player.body.velocity.x = 250;
@@ -59,10 +64,16 @@ function update() {
     darthvader.body.velocity.x = -245;
     alien.body.velocity.x = -245;
 
+    game.physics.arcade.collide(player, alien, restartGame);
+    game.physics.arcade.collide(player, joker, restartGame);
+    game.physics.arcade.collide(player, catwoman, restartGame);
+    game.physics.arcade.collide(player, darthvader, restartGame);
+    // Jumps
     if ((cursors.up.isDown || game.input.pointer1.isDown) && player.body.onFloor())
     {
         player.body.velocity.y = -500;
     }
+
 
 }
 
