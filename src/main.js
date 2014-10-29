@@ -1,4 +1,4 @@
-var game = new Phaser.Game(320, 568, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game("100%", 568, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
     game.load.image('player','assets/sprites/hero.png');
@@ -58,8 +58,8 @@ function update() {
     catwoman.body.velocity.x = -245;
     darthvader.body.velocity.x = -245;
     alien.body.velocity.x = -245;
-    
-    if (cursors.up.isDown && player.body.onFloor())
+
+    if ((cursors.up.isDown || game.input.pointer1.isDown) && player.body.onFloor())
     {
         player.body.velocity.y = -500;
     }
