@@ -1,7 +1,7 @@
 var game = new Phaser.Game("100%", 568, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
-    game.load.image('player','assets/sprites/hero.png');
+    game.load.spritesheet('player','assets/sprites/heroSheet.png', 32, 32);
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
     game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
@@ -13,6 +13,7 @@ var jumpTimer = 0;
 var worldWidth = 10000;
 var worldHeight = 568;
 var powerups = null;
+var currentAnimation = 'right';
 
 function create() {
     game.add.tileSprite(0, 0, worldWidth, worldHeight, 'background');
@@ -30,15 +31,20 @@ function create() {
     powerups = game.add.group();
     powerups.enableBody = true;
     addPowerups(50, worldWidth, game.world.height, 'green-energy');
+    player.animations.add('left', [0, 1, 2, 3], 10, true);
+    player.animations.add('jump', [4], 20, true);
+    player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     joker = game.add.sprite(5000, game.world.centerY, 'player');
     catwoman = game.add.sprite(4000, game.world.centerY, 'player');
     darthvader = game.add.sprite(3000, game.world.centerY, 'player');
     alien = game.add.sprite(2000, game.world.centerY, 'player');
 
-    game.physics.enable(player);
+    game.physics.enable(player, Phaser.Physics.ARCADE);
     player.body.collideWorldBounds = true;
+    player.body.setSize(32, 32, 5, 2);
 
+    game.physics.enable(powerup);
     game.physics.enable(joker);
     game.physics.enable(catwoman);
     game.physics.enable(darthvader);
@@ -63,8 +69,10 @@ function addPowerups(total, width, height, image) {
     		powerup = powerups.create(x, 100, image);
 	    	game.physics.enable(powerup);
     		powerup.body.collideWorldBounds = true;
-		powerup.body.bounce.y = 0.5;
-		powerup.body.bounce.x = 0.5;
+		powerup.body.velocity.x = -100 * Math.random();
+		powerup.body.velocity.y = -100 * Math.random();
+		powerup.body.bounce.y = 1;
+		powerup.body.bounce.x = 1 * Math.random();
 	}
 }
 
@@ -80,6 +88,16 @@ function update() {
     if ((cursors.up.isDown || game.input.pointer1.isDown) && player.body.onFloor())
     {
         player.body.velocity.y = -500;
+    }
+
+    if(player.body.onFloor() && currentAnimation != 'right') {
+        currentAnimation = 'right'
+        player.animations.play('right');
+    }
+    else if(!player.body.onFloor() && currentAnimation != 'jump') {
+
+        currentAnimation = 'jump'
+        player.animations.play('jump');
     }
 
 }
