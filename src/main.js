@@ -11,12 +11,12 @@ function preload() {
 var player;
 var cursors;
 var jumpTimer = 0;
+var worldWidth = 10000;
+var worldHeight = 568;
+var powerups = null;
 var currentAnimation = 'right';
 
 function create() {
-    var worldWidth = 10000;
-    var worldHeight = 568;
-
     game.add.tileSprite(0, 0, worldWidth, worldHeight, 'background');
     game.world.setBounds(0, 0, worldWidth, worldHeight);
 
@@ -28,11 +28,14 @@ function create() {
     game.physics.arcade.gravity.y = 1500;
 
     player = game.add.sprite(1, game.world.centerY, 'player');
+
+    powerups = game.add.group();
+    powerups.enableBody = true;
+    addPowerups(50, worldWidth, game.world.height, 'green-energy');
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('jump', [4], 20, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
-    powerup = game.add.sprite(35, game.world.centerY, 'green-energy');
     joker = game.add.sprite(5000, game.world.centerY, 'tentacle');
     catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
     darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
@@ -43,8 +46,6 @@ function create() {
     player.body.setSize(32, 32, 5, 2);
 
     game.physics.enable(powerup);
-    powerup.body.collideWorldBounds = true;
-
     game.physics.enable(joker);
     game.physics.enable(catwoman);
     game.physics.enable(darthvader);
@@ -54,19 +55,37 @@ function create() {
     darthvader.body.collideWorldBounds = true;
     alien.body.collideWorldBounds = true;
 
-    cursors = game.input.keyboard.createCursorKeys();
 
+    cursors = game.input.keyboard.createCursorKeys();
     game.camera.follow(player);
+}
+
+function getPowerup(player, powerup) {
+	powerup.kill();
+}
+
+function addPowerups(total, width, height, image) {
+	for(i=0; i<total; i++) {
+		x = Math.random() * width;
+    		powerup = powerups.create(x, 100, image);
+	    	game.physics.enable(powerup);
+    		powerup.body.collideWorldBounds = true;
+		powerup.body.velocity.x = -100 * Math.random();
+		powerup.body.velocity.y = -100 * Math.random();
+		powerup.body.bounce.y = 1;
+		powerup.body.bounce.x = 1 * Math.random();
+	}
 }
 
 function update() {
 
-    player.body.velocity.x = 250;
+    player.body.velocity.x = 200;
     joker.body.velocity.x = -245;
     catwoman.body.velocity.x = -245;
     darthvader.body.velocity.x = -245;
     alien.body.velocity.x = -245;
 
+    game.physics.arcade.overlap(player, powerups, getPowerup, null, this);
     if ((cursors.up.isDown || game.input.pointer1.isDown) && player.body.onFloor())
     {
         player.body.velocity.y = -500;
