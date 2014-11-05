@@ -9,11 +9,13 @@ function preload() {
 }
 
 var player;
+var playerCanFly = false;
 var cursors;
 var jumpTimer = 0;
 var worldWidth = 10000;
 var worldHeight = 420;
 var powerups = null;
+var aliens = null;
 var currentAnimation = 'right';
 var score = 0;
 var scoreText = "Score";
@@ -22,6 +24,7 @@ function create() {
     game.add.tileSprite(0, -150, worldWidth, worldHeight+150, 'background');
     game.world.setBounds(0, 0, worldWidth, worldHeight);
 
+    playerCanFly = false;
     music = game.add.audio('amia_dope_song');
     music.loop = true;
     music.play();
@@ -33,7 +36,7 @@ function create() {
 
     powerups = game.add.group();
     powerups.enableBody = true;
-    addPowerups(50, worldWidth, game.world.height, 'green-energy');
+    addPowerups(150, worldWidth, game.world.height, 'green-energy');
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('jump', [4], 20, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -41,7 +44,10 @@ function create() {
     joker = game.add.sprite(5000, game.world.centerY, 'tentacle');
     catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
     darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
-    alien = game.add.sprite(2000, game.world.centerY, 'tentacle');
+
+    aliens = game.add.group();
+    aliens.enableBody = true; 
+    addAliens(25, worldWidth, game.world.height, 'tentacle');
 
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.body.collideWorldBounds = true;
@@ -51,11 +57,10 @@ function create() {
     game.physics.enable(joker);
     game.physics.enable(catwoman);
     game.physics.enable(darthvader);
-    game.physics.enable(alien);
+    game.physics.enable(aliens);
     joker.body.collideWorldBounds = true;
     catwoman.body.collideWorldBounds = true;
     darthvader.body.collideWorldBounds = true;
-    alien.body.collideWorldBounds = true;
 
     scoreText = game.add.text(16, 16, 'Score: ' + score, { fontSize: '32px', fill: '#CCC' });
     scoreText.fixedToCamera = true;
@@ -71,8 +76,9 @@ function restartGame() {
 }
 
 function getPowerup(player, powerup) {
+	playerCanFly = true;
 	powerup.kill();
-	score = score + 5;
+	score = score + 50;
 }
 
 function addPowerups(total, width, height, image) {
@@ -88,24 +94,37 @@ function addPowerups(total, width, height, image) {
 	}
 }
 
+function addAliens(total, width, height, image) {
+	for(i=0; i<total; i++) {
+		x = Math.random() * width;
+    		alien = aliens.create(x, 100, image);
+	    	game.physics.enable(alien);
+    		alien.body.collideWorldBounds = true;
+		alien.body.velocity.x = -100 * Math.random();
+		alien.body.velocity.y = -100 * Math.random();
+		alien.body.bounce.y = 1;
+		alien.body.bounce.x = 1 * Math.random();
+	}
+}
+
 function update() {
 
     player.body.velocity.x = 200;
     joker.body.velocity.x = -245;
     catwoman.body.velocity.x = -245;
     darthvader.body.velocity.x = -245;
-    alien.body.velocity.x = -245;
 
-    game.physics.arcade.collide(player, alien, restartGame);
     game.physics.arcade.collide(player, joker, restartGame);
     game.physics.arcade.collide(player, catwoman, restartGame);
     game.physics.arcade.collide(player, darthvader, restartGame);
 
+    game.physics.arcade.overlap(player, aliens, restartGame, null, this);
     game.physics.arcade.overlap(player, powerups, getPowerup, null, this);
     // Jump
-    if ((cursors.up.isDown || game.input.pointer1.isDown) && player.body.onFloor())
+    if ((cursors.up.isDown || game.input.pointer1.isDown) && (player.body.onFloor() || score > 0))
     {
         player.body.velocity.y = -500;
+	score = score - 1;
     }
 
     if(player.body.onFloor() && currentAnimation != 'right') {
@@ -116,6 +135,10 @@ function update() {
 
         currentAnimation = 'jump'
         player.animations.play('jump');
+    }
+
+    if (score < 0) {
+	score = 0;	
     }
 
     scoreText.text = 'Score: ' + score;
