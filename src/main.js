@@ -15,6 +15,8 @@ var worldWidth = 10000;
 var worldHeight = 420;
 var powerups = null;
 var currentAnimation = 'right';
+var score = 0;
+var scoreText = "Score";
 
 function create() {
     game.add.tileSprite(0, -150, worldWidth, worldHeight+150, 'background');
@@ -55,17 +57,22 @@ function create() {
     darthvader.body.collideWorldBounds = true;
     alien.body.collideWorldBounds = true;
 
+    scoreText = game.add.text(16, 16, 'Score: ' + score, { fontSize: '32px', fill: '#CCC' });
+    scoreText.fixedToCamera = true;
 
     cursors = game.input.keyboard.createCursorKeys();
     game.camera.follow(player);
 }
 
+
 function restartGame() {
+    score = 0;
     game.state.restart();
 }
 
 function getPowerup(player, powerup) {
 	powerup.kill();
+	score = score + 5;
 }
 
 function addPowerups(total, width, height, image) {
@@ -111,12 +118,14 @@ function update() {
         player.animations.play('jump');
     }
 
+    scoreText.text = 'Score: ' + score;
+
 }
 
 function render() {
 
-    game.debug.cameraInfo(game.camera, 32, 32);
-    game.debug.spriteCoords(player, 32, 500);
+    //game.debug.cameraInfo(game.camera, 32, 32);
+    //game.debug.spriteCoords(player, 32, 500);
 
 }
 
