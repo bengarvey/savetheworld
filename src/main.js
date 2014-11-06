@@ -4,7 +4,7 @@ function preload() {
     game.load.spritesheet('player','assets/sprites/heroSheet.png', 32, 32);
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
-    game.load.image('tentacle', 'assets/sprites/tentacleDude.png')
+    game.load.image('tentacle', 'assets/sprites/tentacleDude.png');
     game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
 }
 
@@ -15,6 +15,7 @@ var worldWidth = 10000;
 var worldHeight = 420;
 var powerups = null;
 var currentAnimation = 'right';
+var music;
 
 function create() {
     game.add.tileSprite(0, -150, worldWidth, worldHeight+150, 'background');
@@ -61,6 +62,7 @@ function create() {
 }
 
 function restartGame() {
+    music.stop();
     game.state.restart();
 }
 
