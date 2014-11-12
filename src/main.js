@@ -67,6 +67,16 @@ function create() {
     scoreText.fixedToCamera = true;
 
     cursors = game.input.keyboard.createCursorKeys();
+    spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    spaceBar.onDown.add(pause, self);
+    function pause() {
+        console.log ("is the game paused?", game.paused)
+        if (game.paused == true) {
+            game.paused = false;
+        } else {
+            game.paused = true;
+        }
+    }
     game.camera.follow(player);
 }
 
@@ -126,7 +136,7 @@ function update() {
     if ((cursors.up.isDown || game.input.pointer1.isDown) && (player.body.onFloor() || score > 0))
     {
         player.body.velocity.y = -500;
-	score = score - 1;
+        score = score - 1;
     }
 
     if(player.body.onFloor() && currentAnimation != 'right') {
