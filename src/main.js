@@ -5,6 +5,7 @@ function preload() {
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
     game.load.image('tentacle', 'assets/sprites/tentacleDude.png');
+    game.load.image('asteroid', 'assets/sprites/tentacleDude.png');
     game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
 }
 
@@ -27,6 +28,7 @@ function create() {
 
     playerCanFly = false;
     music = game.add.audio('amia_dope_song');
+    music.stop();
     music.loop = true;
     music.play();
 
@@ -42,7 +44,7 @@ function create() {
     player.animations.add('jump', [4], 20, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
-    joker = game.add.sprite(5000, game.world.centerY, 'tentacle');
+    asteroid = game.add.sprite(10000, Math.random() * 100, 'asteroid');
     catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
     darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
 
@@ -55,11 +57,14 @@ function create() {
     player.body.setSize(32, 32, 5, 2);
 
     game.physics.enable(powerup);
-    game.physics.enable(joker);
+    game.physics.enable(asteroid);
     game.physics.enable(catwoman);
     game.physics.enable(darthvader);
     game.physics.enable(aliens);
-    joker.body.collideWorldBounds = true;
+
+    asteroid.body.allowGravity = false;
+
+    asteroid.body.collideWorldBounds = true;
     catwoman.body.collideWorldBounds = true;
     darthvader.body.collideWorldBounds = true;
 
@@ -80,7 +85,7 @@ function restartGame() {
 function getPowerup(player, powerup) {
 	playerCanFly = true;
 	powerup.kill();
-	score = score + 50;
+	score = score + 15;
 }
 
 function addPowerups(total, width, height, image) {
@@ -98,7 +103,7 @@ function addPowerups(total, width, height, image) {
 
 function addAliens(total, width, height, image) {
 	for(i=0; i<total; i++) {
-		x = Math.random() * width;
+		x = (Math.random() * width + 300);
     		alien = aliens.create(x, 100, image);
 	    	game.physics.enable(alien);
     		alien.body.collideWorldBounds = true;
@@ -112,11 +117,11 @@ function addAliens(total, width, height, image) {
 function update() {
 
     player.body.velocity.x = 200;
-    joker.body.velocity.x = -245;
+    asteroid.body.velocity.x = -350;
     catwoman.body.velocity.x = -245;
     darthvader.body.velocity.x = -245;
 
-    game.physics.arcade.collide(player, joker, restartGame);
+    game.physics.arcade.collide(player, asteroid, restartGame);
     game.physics.arcade.collide(player, catwoman, restartGame);
     game.physics.arcade.collide(player, darthvader, restartGame);
 
