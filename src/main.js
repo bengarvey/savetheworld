@@ -5,7 +5,7 @@ function preload() {
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
     game.load.image('tentacle', 'assets/sprites/tentacleDude.png');
-    game.load.image('asteroid', 'assets/sprites/tentacleDude.png');
+    game.load.image('asteroid', 'assets/sprites/asteroid.png');
     game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
 }
 
