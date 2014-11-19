@@ -25,15 +25,19 @@ var currentAnimation = 'right';
 var music;
 var score = 0;
 var scoreText = "Score";
+var highScores = [];
+var gameState = 0;
 var speedFactor = 1;
 var speedStart = 0;
 
 function create() {
+    gameState = 1;
     game.add.tileSprite(0, -140, 259, worldHeight+150, 'welcome');
     game.add.tileSprite(259, 0, worldWidth, worldHeight+150, 'background');
     game.world.setBounds(0, 0, worldWidth, worldHeight);
 
     playerCanFly = false;
+
     music = game.add.audio('amia_dope_song');
     music.stop();
     music.loop = true;
@@ -120,6 +124,9 @@ function getPowerup(player, powerup) {
 	score = score + 15;
 }
 
+function showHighScores() {
+	gameState = 2;
+}
 function getSpecialPowerup(player, powerup) {
     speedFactor = 2;
     speedStart = Date.now();
@@ -127,7 +134,10 @@ function getSpecialPowerup(player, powerup) {
 }
 
 function winGame() {
-    console.log("win");
+    var name = prompt("You Win! Enter your name:", ""); 
+    alert("Thanks " + name + " your score was " + score + "!");
+    highScores.push( {name: name, score: score} );
+    showHighScores();
 }
 
 function addPowerups(total, width, height, image) {
@@ -177,6 +187,8 @@ function update() {
         }
     }
 
+    if (gameState == 1) {
+    player.body.velocity.x = 200;
     player.body.velocity.x = 200 * speedFactor;
     asteroid.body.velocity.x = -350;
     catwoman.body.velocity.x = -245;
@@ -211,6 +223,16 @@ function update() {
     }
     game.camera.focusOnXY(player.x + 110, player.y + 110)
     scoreText.text = 'Score: ' + score;
+
+    } 
+    else if (gameState == 2) {
+	highscoreText = "";
+	for(i in highScores) {
+		highscoreText = highscoreText + "\n" + highScores[i].name + ":  " + highScores[i].score;
+	}
+	scoreText.text = highscoreText;
+    	player.body.velocity.x = 0;
+    }
 
 }
 
