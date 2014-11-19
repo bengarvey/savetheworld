@@ -58,7 +58,7 @@ function create() {
     catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
     darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
     busStop = game.add.sprite(300, 55, 'busstop');
-    busStop.scale.setTo(0.5, 0.5)
+    busStop.scale.setTo(0.5, 0.5);
     aliens = game.add.group();
     aliens.enableBody = true;
     addAliens(25, worldWidth, game.world.height, 'tentacle');
@@ -123,6 +123,7 @@ function getSpecialPowerup(player, powerup) {
     speedFactor = 2;
     speedStart = Date.now();
     powerup.kill();
+}
 
 function winGame() {
     console.log("win");
