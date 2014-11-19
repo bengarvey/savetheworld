@@ -2,6 +2,7 @@ var game = new Phaser.Game("100%", 420, Phaser.CANVAS, 'game', { preload: preloa
 
 function preload() {
     game.load.spritesheet('player','assets/sprites/heroSheet.png', 32, 32);
+    game.load.image('welcome','assets/welcome.png');
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
     game.load.image('tentacle', 'assets/sprites/tentacleDude.png');
@@ -23,7 +24,8 @@ var score = 0;
 var scoreText = "Score";
 
 function create() {
-    game.add.tileSprite(0, -150, worldWidth, worldHeight+150, 'background');
+    game.add.tileSprite(0, -140, 259, worldHeight+150, 'welcome');
+    game.add.tileSprite(259, -150, worldWidth, worldHeight+150, 'background');
     game.world.setBounds(0, 0, worldWidth, worldHeight);
 
     playerCanFly = false;
