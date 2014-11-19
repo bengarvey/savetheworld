@@ -102,7 +102,8 @@ function create() {
             game.paused = true;
         }
     }
-    game.camera.follow(player);
+    //game.camera.follow(player);
+    //game.camera.focusOnXY(100, 420);
 }
 
 
@@ -208,7 +209,7 @@ function update() {
     if (score < 0) {
 	   score = 0;
     }
-
+    game.camera.focusOnXY(player.x + 110, player.y + 110)
     scoreText.text = 'Score: ' + score;
 
 }
