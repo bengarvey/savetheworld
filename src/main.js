@@ -6,6 +6,7 @@ function preload() {
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
     game.load.image('purple-energy','assets/sprites/purple-energy.png');
+    game.load.image('blue-energy','assets/sprites/blue-energy.png');
     game.load.image('tentacle', 'assets/sprites/tentacleDude.png');
     game.load.image('asteroid', 'assets/sprites/asteroid.png');
     game.load.image('busstop', 'assets/best-bus-stop-in-the-world-by-amia.gif');
@@ -18,7 +19,8 @@ var cursors;
 var jumpTimer = 0;
 var worldWidth = 10000;
 var worldHeight = 420;
-var specialPowerups = null;
+var speedupPowerups = null;
+var slowdownPowerups = null;
 var powerups = null;
 var aliens = null;
 var currentAnimation = 'right';
@@ -27,6 +29,7 @@ var score = 0;
 var scoreText = "Score";
 var speedFactor = 1;
 var speedStart = 0;
+var slowStart = 0;
 
 function create() {
     game.add.tileSprite(0, -140, 259, worldHeight+150, 'welcome');
@@ -47,9 +50,12 @@ function create() {
     powerups = game.add.group();
     powerups.enableBody = true;
     addPowerups(150, worldWidth, game.world.height, 'green-energy');
-    specialPowerups = game.add.group();
-    specialPowerups.enableBody = true;
-    addSpecialPowerups(15, worldWidth, game.world.height, 'purple-energy');
+    speedupPowerups = game.add.group();
+    speedupPowerups.enableBody = true;
+    addSpeedupPowerups(15, worldWidth, game.world.height, 'purple-energy');
+    slowdownPowerups = game.add.group();
+    slowdownPowerups.enableBody = true;
+    addSlowdownPowerups(20, worldWidth, game.world.height, 'blue-energy');
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('jump', [4], 20, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -75,7 +81,8 @@ function create() {
     player.body.setSize(32, 32, 5, 2);
 
     game.physics.enable(powerup);
-    game.physics.enable(specialPowerup);
+    game.physics.enable(speedupPowerup);
+    game.physics.enable(slowdownPowerup);
     game.physics.enable(asteroid);
     game.physics.enable(catwoman);
     game.physics.enable(darthvader);
@@ -110,6 +117,8 @@ function restartGame() {
     music.stop();
     score = 0;
     speedFactor = 1;
+    speedStart = 0;
+    slowStart = 0;
     game.state.restart();
 }
 
@@ -119,9 +128,19 @@ function getPowerup(player, powerup) {
 	score = score + 15;
 }
 
-function getSpecialPowerup(player, powerup) {
+function getSpeedupPowerup(player, powerup) {
     speedFactor = 2;
     speedStart = Date.now();
+    powerup.kill();
+}
+
+function getSlowdownPowerup(player, powerup) {
+    if(slowStart == 0) {
+        aliens.setAll('body.velocity.x', 0.5, false, false, 3);
+        aliens.setAll('body.velocity.y', 0.5, false, false, 3);
+        aliens.setAll('body.gravity.y', 0.5, false, false, 3);
+    }
+    slowStart = Date.now();
     powerup.kill();
 }
 
@@ -142,18 +161,32 @@ function addPowerups(total, width, height, image) {
 	}
 }
 
-function addSpecialPowerups(total, width, height, image) {
+function addSpeedupPowerups(total, width, height, image) {
     for(i=0; i<total; i++) {
         x = Math.random() * width;
-            specialPowerup = specialPowerups.create(x, 100, image);
-            game.physics.enable(powerup);
-            specialPowerup.body.collideWorldBounds = true;
-        specialPowerup.body.velocity.x = -100 * Math.random();
-        specialPowerup.body.velocity.y = -100 * Math.random();
-        specialPowerup.body.bounce.y = 1;
-        specialPowerup.body.bounce.x = 1 * Math.random();
+            speedupPowerup = speedupPowerups.create(x, 100, image);
+            game.physics.enable(speedupPowerup);
+            speedupPowerup.body.collideWorldBounds = true;
+        speedupPowerup.body.velocity.x = -100 * Math.random();
+        speedupPowerup.body.velocity.y = -100 * Math.random();
+        speedupPowerup.body.bounce.y = 1;
+        speedupPowerup.body.bounce.x = 1 * Math.random();
     }
 }
+
+function addSlowdownPowerups(total, width, height, image) {
+    for(i=0; i<total; i++) {
+        x = Math.random() * width;
+            slowdownPowerup = slowdownPowerups.create(x, 100, image);
+            game.physics.enable(slowdownPowerup);
+            slowdownPowerup.body.collideWorldBounds = true;
+        slowdownPowerup.body.velocity.x = -100 * Math.random();
+        slowdownPowerup.body.velocity.y = -100 * Math.random();
+        slowdownPowerup.body.bounce.y = 1;
+        slowdownPowerup.body.bounce.x = 1 * Math.random();
+    }
+}
+
 
 function addAliens(total, width, height, image) {
 	for(i=0; i<total; i++) {
@@ -175,6 +208,14 @@ function update() {
             speedFactor = 1;
         }
     }
+    if(slowStart != 0) {
+        if(Date.now() - slowStart >= 3000){
+            slowStart = 0;
+            aliens.setAll('body.velocity.x', 2, false, false, 3);
+            aliens.setAll('body.velocity.y', 2, false, false, 3);
+            aliens.setAll('body.gravity.y', 2, false, false, 3);
+        }
+    }
 
     player.body.velocity.x = 200 * speedFactor;
     asteroid.body.velocity.x = -350;
@@ -187,7 +228,8 @@ function update() {
     game.physics.arcade.overlap(player, busStop, winGame, null, this);
     game.physics.arcade.overlap(player, aliens, restartGame, null, this);
     game.physics.arcade.overlap(player, powerups, getPowerup, null, this);
-    game.physics.arcade.overlap(player, specialPowerups, getSpecialPowerup, null, this);
+    game.physics.arcade.overlap(player, speedupPowerups, getSpeedupPowerup, null, this);
+    game.physics.arcade.overlap(player, slowdownPowerups, getSlowdownPowerup, null, this);
     // Jump
     if ((cursors.up.isDown || game.input.pointer1.isDown) && (player.body.onFloor() || score > 0))
     {
