@@ -1,4 +1,4 @@
-var game = new Phaser.Game("100%", 420, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game("100%", "100", Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
     game.load.spritesheet('player','assets/sprites/heroSheet.png', 32, 32);
@@ -221,3 +221,17 @@ function render() {
 
 }
 
+function resizeGame() {
+    var height = window.innerHeight;
+    var width = window.innerWidth;
+
+    game.width = width;
+    game.height = height;
+    game.stage.bounds.width = width;
+    game.stage.bounds.height = height;
+console.log("resizing to", width, height);
+    if (game.renderType === Phaser.WEBGL)
+    {
+        game.renderer.resize(width, height);
+    }
+}
