@@ -56,7 +56,7 @@ function create() {
     asteroid = game.add.sprite(10000, Math.random() * 100, 'asteroid');
     catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
     darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
-    busStop = game.add.sprite(500, 55, 'busstop');
+    busStop = game.add.sprite(worldWidth-100, 55, 'busstop');
     busStop.scale.setTo(0.5, 0.5)
     aliens = game.add.group();
     aliens.enableBody = true;
