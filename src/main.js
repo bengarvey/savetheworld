@@ -25,7 +25,7 @@ var scoreText = "Score";
 
 function create() {
     game.add.tileSprite(0, -140, 259, worldHeight+150, 'welcome');
-    game.add.tileSprite(259, -150, worldWidth, worldHeight+150, 'background');
+    game.add.tileSprite(259, 0, worldWidth, worldHeight+150, 'background');
     game.world.setBounds(0, 0, worldWidth, worldHeight);
 
     playerCanFly = false;
