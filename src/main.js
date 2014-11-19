@@ -57,7 +57,7 @@ function create() {
     asteroid = game.add.sprite(10000, Math.random() * 100, 'asteroid');
     catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
     darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
-    busStop = game.add.sprite(300, 55, 'busstop');
+    busStop = game.add.sprite(9900, 55, 'busstop');
     busStop.scale.setTo(0.5, 0.5)
     aliens = game.add.group();
     aliens.enableBody = true;
@@ -69,7 +69,7 @@ function create() {
     //busStop.body.setSize(150, 150, 0, 0);
     busStop.body.immovable = true;
     // busStop.body.velocity.x = 0;
-    
+
 
     player.body.collideWorldBounds = true;
     player.body.setSize(32, 32, 5, 2);
@@ -123,6 +123,7 @@ function getSpecialPowerup(player, powerup) {
     speedFactor = 2;
     speedStart = Date.now();
     powerup.kill();
+}
 
 function winGame() {
     console.log("win");
