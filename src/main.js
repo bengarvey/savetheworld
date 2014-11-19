@@ -8,7 +8,7 @@ function preload() {
     game.load.image('tentacle', 'assets/sprites/tentacleDude.png');
     game.load.image('asteroid', 'assets/sprites/tentacleDude.png');
     game.load.image('busstop', 'assets/best-bus-stop-in-the-world-by-amia.gif');
-    game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
+    //game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
 }
 
 var player;
@@ -23,17 +23,23 @@ var currentAnimation = 'right';
 var music;
 var score = 0;
 var scoreText = "Score";
+var highScores = [];
+var gameState = 0;
 
 function create() {
+    gameState = 1;
     game.add.tileSprite(0, -140, 259, worldHeight+150, 'welcome');
     game.add.tileSprite(259, 0, worldWidth, worldHeight+150, 'background');
     game.world.setBounds(0, 0, worldWidth, worldHeight);
 
     playerCanFly = false;
+
+/*
     music = game.add.audio('amia_dope_song');
     music.stop();
     music.loop = true;
     music.play();
+*/
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.gravity.y = 1500;
@@ -50,7 +56,7 @@ function create() {
     asteroid = game.add.sprite(10000, Math.random() * 100, 'asteroid');
     catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
     darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
-    busStop = game.add.sprite(300, 55, 'busstop');
+    busStop = game.add.sprite(500, 55, 'busstop');
     busStop.scale.setTo(0.5, 0.5)
     aliens = game.add.group();
     aliens.enableBody = true;
@@ -99,7 +105,7 @@ function create() {
 
 
 function restartGame() {
-    music.stop();
+    //music.stop();
     score = 0;
     game.state.restart();
 }
@@ -110,8 +116,15 @@ function getPowerup(player, powerup) {
 	score = score + 15;
 }
 
+function showHighScores() {
+	gameState = 2;
+}
+
 function winGame() {
-    console.log("win");
+    var name = prompt("You Win! Enter your name:", ""); 
+    alert("Thanks " + name + " your score was " + score + "!");
+    highScores.push( {name: name, score: score} );
+    showHighScores();
 }
 
 function addPowerups(total, width, height, image) {
@@ -142,6 +155,7 @@ function addAliens(total, width, height, image) {
 
 function update() {
 
+    if (gameState == 1) {
     player.body.velocity.x = 200;
     asteroid.body.velocity.x = -350;
     catwoman.body.velocity.x = -245;
@@ -175,6 +189,16 @@ function update() {
     }
 
     scoreText.text = 'Score: ' + score;
+
+    } 
+    else if (gameState == 2) {
+	highscoreText = "";
+	for(i in highScores) {
+		highscoreText = highscoreText + "\n" + highScores[i].name + ":  " + highScores[i].score;
+	}
+	scoreText.text = highscoreText;
+    	player.body.velocity.x = 0;
+    }
 
 }
 
