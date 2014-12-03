@@ -7,6 +7,7 @@ function preload() {
     game.load.image('green-energy','assets/sprites/green-energy.png');
     game.load.image('purple-energy','assets/sprites/purple-energy.png');
     game.load.image('tentacle', 'assets/sprites/tentacleDude.png');
+    game.load.image('robot', 'assets/sprites/bigRobot.png');
     game.load.image('asteroid', 'assets/sprites/asteroid.png');
     game.load.image('busstop', 'assets/best-bus-stop-in-the-world-by-amia.gif');
     game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
@@ -59,8 +60,8 @@ function create() {
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     asteroid = game.add.sprite(10000, Math.random() * 100, 'asteroid');
-    catwoman = game.add.sprite(4000, game.world.centerY, 'tentacle');
-    darthvader = game.add.sprite(3000, game.world.centerY, 'tentacle');
+    catwoman = game.add.sprite(4000, game.world.centerY, 'robot');
+    darthvader = game.add.sprite(3000, game.world.centerY, 'robot');
     busStop = game.add.sprite(9900, 55, 'busstop');
     busStop.scale.setTo(0.5, 0.5)
     aliens = game.add.group();
