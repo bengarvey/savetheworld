@@ -93,7 +93,7 @@ function create() {
     darthvader.body.collideWorldBounds = true;
 
 
-    scoreText = game.add.text(16, 16, 'Score: ' + score, { fontSize: '32px', fill: '#CCC' });
+    scoreText = game.add.text(16, 16, 'Score: ' + score, { fontSize: '32px', fill: '#FFF' });
     scoreText.fixedToCamera = true;
 
     cursors = game.input.keyboard.createCursorKeys();
@@ -139,6 +139,14 @@ function winGame() {
     alert("Thanks " + name + " your score was " + score + "!");
     highScores.push( {name: name, score: score} );
     showHighScores();
+
+    setTimeout( function() {
+	    var playAgain = confirm("Do you want to play again?");
+	  
+	    if (playAgain == true) {
+		restartGame();
+	    }
+    }, 3000);
 }
 
 function addPowerups(total, width, height, image) {
@@ -227,7 +235,10 @@ function update() {
 
     } 
     else if (gameState == 2) {
-	highscoreText = "";
+
+	highScores.sort(compareScores);
+
+	highscoreText = "HIGHSCORES\n";
 	for(i in highScores) {
 		highscoreText = highscoreText + "\n" + highScores[i].name + ":  " + highScores[i].score;
 	}
@@ -235,6 +246,10 @@ function update() {
     	player.body.velocity.x = 0;
     }
 
+}
+
+function compareScores(a, b) {
+  return b.score - a.score;
 }
 
 function render() {
