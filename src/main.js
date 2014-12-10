@@ -2,7 +2,7 @@ var game = new Phaser.Game("100%", 420, Phaser.CANVAS, 'game', { preload: preloa
 
 function preload() {
     game.load.spritesheet('player','assets/sprites/heroSheet.png', 32, 32);
-    game.load.image('welcome','assets/welcome.png');
+    game.load.image('welcome','assets/welcomeWithCredits.png');
     game.load.image('background','assets/tests/space-city.png');
     game.load.image('green-energy','assets/sprites/green-energy.png');
     game.load.image('purple-energy','assets/sprites/purple-energy.png');
