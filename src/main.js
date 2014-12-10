@@ -200,7 +200,9 @@ function update() {
     asteroid.body.velocity.x = -350;
     catwoman.body.velocity.x = -245;
     darthvader.body.velocity.x = -245;
-    progress = new Phaser.Rectangle(player.body.x, 0, player.body.x/100, 5);
+    progressPercent = player.body.x/worldWidth
+    progressBarWidth = progressPercent*game.camera.width
+    progress = new Phaser.Rectangle(game.camera.x, 0, progressBarWidth, 5);
     progress.fixedToCamera = true;
     game.physics.arcade.collide(player, asteroid, restartGame);
     game.physics.arcade.collide(player, catwoman, restartGame);
