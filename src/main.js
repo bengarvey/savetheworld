@@ -1,4 +1,5 @@
-var game = new Phaser.Game("100%", 420, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game("100%", "100", Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render });
+var music;
 
 function preload() {
     game.load.spritesheet('player','assets/sprites/heroSheet.png', 32, 32);
@@ -11,6 +12,7 @@ function preload() {
     game.load.image('asteroid', 'assets/sprites/asteroid.png');
     game.load.image('busstop', 'assets/best-bus-stop-in-the-world-by-amia.gif');
     game.load.audio('amia_dope_song', ['assets/amia_dope_song.m4a']);
+    music = game.add.audio('amia_dope_song');
 }
 
 var player;
@@ -23,7 +25,6 @@ var specialPowerups = null;
 var powerups = null;
 var aliens = null;
 var currentAnimation = 'right';
-var music;
 var score = 0;
 var scoreText = "Score";
 var highScores = [];
@@ -39,7 +40,6 @@ function create() {
 
     playerCanFly = false;
 
-    music = game.add.audio('amia_dope_song');
     music.stop();
     music.loop = true;
     music.play();
@@ -91,9 +91,7 @@ function create() {
     asteroid.body.collideWorldBounds = true;
     catwoman.body.collideWorldBounds = true;
     darthvader.body.collideWorldBounds = true;
-
-
-    scoreText = game.add.text(16, 16, 'Score: ' + score, { fontSize: '32px', fill: '#FFF' });
+    scoreText = game.add.text(16, 16, 'Score: ' + score, { fontSize: '32px', fill: '#CCC' });
     scoreText.fixedToCamera = true;
 
     cursors = game.input.keyboard.createCursorKeys();
@@ -202,7 +200,8 @@ function update() {
     asteroid.body.velocity.x = -350;
     catwoman.body.velocity.x = -245;
     darthvader.body.velocity.x = -245;
-
+    progress = new Phaser.Rectangle(player.body.x, 0, player.body.x/100, 5);
+    progress.fixedToCamera = true;
     game.physics.arcade.collide(player, asteroid, restartGame);
     game.physics.arcade.collide(player, catwoman, restartGame);
     game.physics.arcade.collide(player, darthvader, restartGame);
@@ -253,9 +252,24 @@ function compareScores(a, b) {
 }
 
 function render() {
+    game.debug.geom(progress,'#0fffff');
 
     //game.debug.cameraInfo(game.camera, 32, 32);
     //game.debug.spriteCoords(player, 32, 500);
 
 }
 
+function resizeGame() {
+    var height = window.innerHeight;
+    var width = window.innerWidth;
+
+    game.width = width;
+    game.height = height;
+    game.stage.bounds.width = width;
+    game.stage.bounds.height = height;
+console.log("resizing to", width, height);
+    if (game.renderType === Phaser.WEBGL)
+    {
+        game.renderer.resize(width, height);
+    }
+}
